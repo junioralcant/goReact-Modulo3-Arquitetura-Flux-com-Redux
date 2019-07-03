@@ -2,6 +2,10 @@ import React, { Fragment } from "react";
 
 import PropTypes from "prop-types";
 
+import { bindActionCreators } from "redux";
+
+import * as TodoActions from "./store/actions/todo";
+
 import { connect } from "react-redux";
 
 // Lista os todos
@@ -31,10 +35,8 @@ const mapStateToProps = state => ({
   todos: state.todos
 });
 
-const mapDispatchToProps = dispatch => ({
-  // adiciona no reducer de todos
-  addTodo: text => dispatch({ type: "ADD_TODO", payload: { text } })
-});
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(TodoActions, dispatch);
 
 export default connect(
   mapStateToProps,
