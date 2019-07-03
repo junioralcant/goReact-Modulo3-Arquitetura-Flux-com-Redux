@@ -4,9 +4,11 @@ import { Provider } from "react-redux";
 
 import store from "./store";
 
+import Todos from "./TodoList";
+
 const App = () => (
   <Provider store={store}>
-    <h1>Hello World</h1>
+    <Todos />
   </Provider>
 );
 
