@@ -1,8 +1,29 @@
 import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
 
-export default class Main extends Component {
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as FavoriteActions from "../../store/actions/favorites";
+
+class Main extends Component {
+  static propTypes = {
+    addFavorite: PropTypes.func.isRequired,
+    favorite: PropTypes.arrayOf({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      description: PropTypes.string,
+      url: PropTypes.string
+    }).isRequired
+  };
+
   state = {
     repositoryInput: ""
+  };
+
+  handleAddRepository = event => {
+    event.preventDefault();
+
+    this.props.addFavorite();
   };
   render() {
     return (
@@ -18,15 +39,28 @@ export default class Main extends Component {
         </form>
 
         <ul>
-          <li>
-            <p>
-              <strong>facebook/react</strong> (A declarative, efficient, and
-              flexible JavaScript library for building user interfaces)
-            </p>
-            <a href="https://github.com/facebook/react">Acessar</a>
-          </li>
+          {this.props.favorites.map(favorite => (
+            <li key={favorite.id}>
+              <p>
+                <strong>{favorite.name}</strong> ({favorite.description})
+              </p>
+              <a href={favorite.url}>Acessar</a>
+            </li>
+          ))}
         </ul>
       </Fragment>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  favorites: state.favorites
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(FavoriteActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Main);
