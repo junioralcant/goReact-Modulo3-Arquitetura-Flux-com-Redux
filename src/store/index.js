@@ -2,7 +2,7 @@ import { createStore, compose, applyMiddleware } from "redux";
 
 import reducers from "./reducers";
 
-// Para poder verificar qualquer alteração feita na aplicação atravez do reactotron
+// Para poder verificar quaisquer alteração feita na aplicação através do reactotron
 const composer =
   process.env.NODE_ENV === "development"
     ? compose(
