@@ -7,12 +7,18 @@ import * as FavoriteActions from "../../store/actions/favorites";
 
 class Main extends Component {
   static propTypes = {
-    addFavorite: PropTypes.func.isRequired,
-    favorite: PropTypes.arrayOf({
-      id: PropTypes.number,
-      name: PropTypes.string,
-      description: PropTypes.string,
-      url: PropTypes.string
+    addFavoriteRequest: PropTypes.func.isRequired,
+    favorites: PropTypes.shape({
+      loading: PropTypes.bool,
+      data: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.number,
+          name: PropTypes.string,
+          description: PropTypes.string,
+          url: PropTypes.string
+        })
+      ),
+      error: PropTypes.oneOfType([null, PropTypes.string]) //pode ser null ou string
     }).isRequired
   };
 
@@ -23,12 +29,14 @@ class Main extends Component {
   handleAddRepository = event => {
     event.preventDefault();
 
-    this.props.addFavorite();
+    this.props.addFavoriteRequest(this.state.repositoryInput);
+
+    this.setState({ repositoryInput: "" });
   };
   render() {
     return (
       <Fragment>
-        <form onClick={this.handleAddRepository}>
+        <form onSubmit={this.handleAddRepository}>
           <input
             placeholder="usuário/repositório"
             value={this.state.repositoryInput}
@@ -36,10 +44,19 @@ class Main extends Component {
           />
 
           <button type="submit">Adicionar</button>
+
+          {this.props.favorites.loading && <span>Carregando...</span>}
+
+          {!!this.props.favorites.error && (
+            <span style={{ color: "#f00" }}>
+              {" "}
+              {this.props.favorites.error}{" "}
+            </span>
+          )}
         </form>
 
         <ul>
-          {this.props.favorites.map(favorite => (
+          {this.props.favorites.data.map(favorite => (
             <li key={favorite.id}>
               <p>
                 <strong>{favorite.name}</strong> ({favorite.description})
